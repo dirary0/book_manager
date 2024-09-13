@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 )
 
 func main() {
@@ -49,7 +50,7 @@ func main() {
 	}
 
 	// 创建测试借阅记录
-	borrowRecord := &models.Borrow{UserID: user.ID, BookID: book.ID}
+	borrowRecord := &models.Borrow{UserID: user.ID, BookID: book.ID, BorrowDate: time.Now()}
 	if err := borrowRepo.Create(ctx, borrowRecord); err != nil {
 		fmt.Printf("Failed to create borrow record: %v\n", err)
 	} else {
