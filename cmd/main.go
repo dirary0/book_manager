@@ -2,24 +2,23 @@ package main
 
 import (
 	"book_manager/config"
-	"book_manager/internal/models"
 	"log"
+	"os"
 )
 
 func main() {
 	config.InitDB()
 
-	db := config.GetDB()
-
-	// 自动迁移，创建表
-	err := db.AutoMigrate(&models.Book{}, &models.User{}, &models.Borrow{})
+	logger := log.New(os.Stdout, "INFO: ", log.LstdFlags)
+	// 通过 Wire 自动生成的依赖注入代码创建应用程序
+	app, cleanup, err := newApp(logger)
 	if err != nil {
-		log.Fatalf("自动创建表失败: %v", err)
+		panic(err)
 	}
+	defer cleanup()
 
-	log.Println("各类表创建成功.")
-
-	//启动 HTTP 服务或其他应用逻辑
-	//r := server.NewRouter(...)
-	//r.Run()
+	// 启动 HTTP 服务
+	if err := app.Run(); err != nil {
+		logger.Fatalf("启动失败: %v", err)
+	}
 }
