@@ -10,8 +10,7 @@ func main() {
 	config.InitDB()
 
 	logger := log.New(os.Stdout, "INFO: ", log.LstdFlags)
-	// 通过 Wire 自动生成的依赖注入代码创建应用程序
-	app, cleanup, err := newApp(logger)
+	app, cleanup, err := newApp()
 	if err != nil {
 		panic(err)
 	}
