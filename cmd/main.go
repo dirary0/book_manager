@@ -1,14 +1,13 @@
 package main
 
 import (
-	"book_manager/config"
+	"book_manager/internal/repository"
 	"log"
 	"os"
 )
 
 func main() {
-	config.InitDB()
-
+	repository.InitDB()
 	logger := log.New(os.Stdout, "INFO: ", log.LstdFlags)
 	app, cleanup, err := newApp()
 	if err != nil {

@@ -4,7 +4,6 @@
 package main
 
 import (
-	"book_manager/config"
 	"book_manager/internal/handler"
 	"book_manager/internal/repository"
 	"book_manager/internal/server"
@@ -31,7 +30,7 @@ var ServerSet = wire.NewSet(
 	server.NewRouter,
 )
 var ConfigSet = wire.NewSet(
-	config.GetDB,
+	repository.GetDB,
 )
 
 func newApp() (*gin.Engine, func(), error) {

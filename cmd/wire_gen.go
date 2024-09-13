@@ -7,7 +7,6 @@
 package main
 
 import (
-	"book_manager/config"
 	"book_manager/internal/handler"
 	"book_manager/internal/repository"
 	"book_manager/internal/server"
@@ -19,7 +18,7 @@ import (
 // Injectors from wire.go:
 
 func newApp() (*gin.Engine, func(), error) {
-	db := config.GetDB()
+	db := repository.GetDB()
 	bookRepository := repository.NewBookRepository(db)
 	bookService := service.NewBookService(bookRepository)
 	bookHandler := handler.NewBookHandler(bookService)
@@ -38,4 +37,4 @@ var HandlerSet = wire.NewSet(handler.NewBookHandler)
 
 var ServerSet = wire.NewSet(server.NewRouter)
 
-var ConfigSet = wire.NewSet(config.GetDB)
+var ConfigSet = wire.NewSet(repository.GetDB)
