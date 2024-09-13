@@ -20,10 +20,12 @@ var RepositorySet = wire.NewSet(
 
 var ServiceSet = wire.NewSet(
 	service.NewBookService,
+	service.NewUserService,
 )
 
 var HandlerSet = wire.NewSet(
 	handler.NewBookHandler,
+	handler.NewUserHandler,
 )
 
 var ServerSet = wire.NewSet(
