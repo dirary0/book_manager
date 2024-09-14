@@ -21,11 +21,13 @@ var RepositorySet = wire.NewSet(
 var ServiceSet = wire.NewSet(
 	service.NewBookService,
 	service.NewUserService,
+	service.NewBorrowService,
 )
 
 var HandlerSet = wire.NewSet(
 	handler.NewBookHandler,
 	handler.NewUserHandler,
+	handler.NewBorrowHandler,
 )
 
 var ServerSet = wire.NewSet(

@@ -22,7 +22,13 @@ func newApp() (*gin.Engine, func(), error) {
 	bookRepository := repository.NewBookRepository(db)
 	bookService := service.NewBookService(bookRepository)
 	bookHandler := handler.NewBookHandler(bookService)
-	engine := server.NewRouter(bookHandler)
+	userRepository := repository.NewUserRepository(db)
+	userService := service.NewUserService(userRepository)
+	userHandler := handler.NewUserHandler(userService)
+	borrowRepository := repository.NewBorrowRepository(db)
+	borrowService := service.NewBorrowService(borrowRepository, bookRepository)
+	borrowHandler := handler.NewBorrowHandler(borrowService)
+	engine := server.NewRouter(bookHandler, userHandler, borrowHandler)
 	return engine, func() {
 	}, nil
 }
@@ -31,9 +37,9 @@ func newApp() (*gin.Engine, func(), error) {
 
 var RepositorySet = wire.NewSet(repository.NewBookRepository, repository.NewUserRepository, repository.NewBorrowRepository)
 
-var ServiceSet = wire.NewSet(service.NewBookService)
+var ServiceSet = wire.NewSet(service.NewBookService, service.NewUserService, service.NewBorrowService)
 
-var HandlerSet = wire.NewSet(handler.NewBookHandler)
+var HandlerSet = wire.NewSet(handler.NewBookHandler, handler.NewUserHandler, handler.NewBorrowHandler)
 
 var ServerSet = wire.NewSet(server.NewRouter)
 

@@ -10,8 +10,8 @@ import (
 
 type BookService interface {
 	CreateBook(ctx context.Context, req *dto.BookDTO) error
-	UpdateBook(ctx context.Context, req *dto.BookDTO) error
-	DeleteBook(ctx context.Context, bookID uint) error
+	UpdateBookByID(ctx context.Context, bookID uint, req *dto.BookDTO) error
+	DeleteBookByID(ctx context.Context, bookID uint) error
 	GetBookByID(ctx context.Context, bookID uint) (*models.Book, error)
 	ListAllBooks(ctx context.Context) ([]*models.Book, error)
 	GetBookByCode(ctx context.Context, code string) (*models.Book, error)
@@ -41,9 +41,9 @@ func (s *bookService) CreateBook(ctx context.Context, req *dto.BookDTO) error {
 	return nil
 }
 
-// UpdateBook 更新图书信息
-func (s *bookService) UpdateBook(ctx context.Context, req *dto.BookDTO) error {
-	book, err := s.bookRepository.FindByID(ctx, req.ID)
+// UpdateBookByID 更新图书信息
+func (s *bookService) UpdateBookByID(ctx context.Context, bookID uint, req *dto.BookDTO) error {
+	book, err := s.bookRepository.FindByID(ctx, bookID)
 	if err != nil {
 		return errors.New("未找到图书: " + err.Error())
 	}
@@ -56,8 +56,8 @@ func (s *bookService) UpdateBook(ctx context.Context, req *dto.BookDTO) error {
 	return nil
 }
 
-// DeleteBook 删除图书
-func (s *bookService) DeleteBook(ctx context.Context, bookID uint) error {
+// DeleteBookByID 删除图书
+func (s *bookService) DeleteBookByID(ctx context.Context, bookID uint) error {
 	if err := s.bookRepository.Delete(ctx, bookID); err != nil {
 		return errors.New("删除图书失败: " + err.Error())
 	}

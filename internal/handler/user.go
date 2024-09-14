@@ -37,12 +37,19 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 // UpdateUser 更新用户信息
 func (h *UserHandler) UpdateUser(c *gin.Context) {
 	var req dto.UserDTO
+	userID := c.Param("id")
+
+	id, err := strconv.ParseUint(userID, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的用户ID"})
+		return
+	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "请求参数错误"})
 		return
 	}
 
-	if err := h.userService.UpdateUser(c.Request.Context(), &req); err != nil {
+	if err := h.userService.UpdateUserByID(c.Request.Context(), uint(id), &req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -60,7 +67,7 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	if err := h.userService.DeleteUser(c.Request.Context(), uint(id)); err != nil {
+	if err := h.userService.DeleteUserByID(c.Request.Context(), uint(id)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

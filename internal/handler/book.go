@@ -37,12 +37,18 @@ func (h *BookHandler) CreateBook(c *gin.Context) {
 // UpdateBook 更新图书
 func (h *BookHandler) UpdateBook(c *gin.Context) {
 	var req dto.BookDTO
+	bookID := c.Param("id")
+	id, err := strconv.ParseUint(bookID, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的图书ID"})
+		return
+	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "请求参数错误"})
 		return
 	}
 
-	if err := h.bookService.UpdateBook(c.Request.Context(), &req); err != nil {
+	if err := h.bookService.UpdateBookByID(c.Request.Context(), uint(id), &req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -61,7 +67,7 @@ func (h *BookHandler) DeleteBook(c *gin.Context) {
 		return
 	}
 
-	if err := h.bookService.DeleteBook(c.Request.Context(), uint(id)); err != nil {
+	if err := h.bookService.DeleteBookByID(c.Request.Context(), uint(id)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

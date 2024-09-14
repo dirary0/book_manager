@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewRouter(bookHandler *handler.BookHandler, userHandler handler.UserHandler) *gin.Engine {
+func NewRouter(bookHandler *handler.BookHandler, userHandler *handler.UserHandler, borrowHandler *handler.BorrowHandler) *gin.Engine {
 	r := gin.Default()
 	r.Use(
 		middleware.CORS(),
@@ -28,5 +28,11 @@ func NewRouter(bookHandler *handler.BookHandler, userHandler handler.UserHandler
 	r.DELETE("/users/:id", userHandler.DeleteUser)                       // 删除用户
 	r.GET("/users/username/:username", userHandler.GetUserByUsername)    // 通过用户名获取用户
 	r.PUT("/users/username/:username", userHandler.UpdateUserByUsername) // 通过用户名更新用户信息
+
+	// 借书还书相关路由
+	r.POST("/borrow", borrowHandler.BorrowBook)                                     // 借书
+	r.POST("/return/:id", borrowHandler.ReturnBook)                                 // 还书
+	r.GET("/borrow/userid/:user_id", borrowHandler.ListUserBorrowRecordsById)       // 查询用户的所有借阅记录
+	r.GET("/borrow/username/:user_name", borrowHandler.ListUserBorrowRecordsByName) // 查询用户的所有借阅记录
 	return r
 }

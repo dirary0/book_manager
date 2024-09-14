@@ -10,8 +10,8 @@ import (
 
 type UserService interface {
 	CreateUser(ctx context.Context, req *dto.UserDTO) error
-	UpdateUser(ctx context.Context, req *dto.UserDTO) error
-	DeleteUser(ctx context.Context, userID uint) error
+	UpdateUserByID(ctx context.Context, userID uint, req *dto.UserDTO) error
+	DeleteUserByID(ctx context.Context, userID uint) error
 	GetUserByID(ctx context.Context, userID uint) (*models.User, error)
 	ListAllUsers(ctx context.Context) ([]*models.User, error)
 	GetUserByUsername(ctx context.Context, username string) (*models.User, error)
@@ -38,8 +38,8 @@ func (s *userService) CreateUser(ctx context.Context, req *dto.UserDTO) error {
 	return nil
 }
 
-func (s *userService) UpdateUser(ctx context.Context, req *dto.UserDTO) error {
-	user, err := s.userRepository.FindByID(ctx, req.ID)
+func (s *userService) UpdateUserByID(ctx context.Context, userID uint, req *dto.UserDTO) error {
+	user, err := s.userRepository.FindByID(ctx, userID)
 	if err != nil {
 		return errors.New("未找到用户: " + err.Error())
 	}
@@ -50,7 +50,7 @@ func (s *userService) UpdateUser(ctx context.Context, req *dto.UserDTO) error {
 	return nil
 }
 
-func (s *userService) DeleteUser(ctx context.Context, userID uint) error {
+func (s *userService) DeleteUserByID(ctx context.Context, userID uint) error {
 	if err := s.userRepository.Delete(ctx, userID); err != nil {
 		return errors.New("删除用户失败: " + err.Error())
 	}
